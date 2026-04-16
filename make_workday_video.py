@@ -154,88 +154,234 @@ def slide_outro():
 
 # ── Narration text ─────────────────────────────────────────────────────────────
 NARRATION = [
-    # (key, text)
-    ("intro",
-     "If you've ever spent an afternoon chasing a Workday ticket in completely the wrong "
-     "direction — fixing security when it was actually an org problem, or restructuring a "
-     "hierarchy when it was just a role assignment — this one's for you. "
-     "I'm going to walk you through a simple three-step triage for any query that touches "
-     "organisation structures or security in Workday. By the end of this, you'll know exactly "
-     "which questions to ask first — and you'll stop wasting time solving the wrong problem. "
-     "Let's get into it."),
+    # (key, ssml)  — espeak-ng processes these with -m flag
+    ("intro", """<speak>
+<p>If you've ever spent an afternoon chasing a Workday ticket
+in <prosody rate="95%">completely the wrong direction</prosody> —
+<break time="200ms"/>
+fixing security when it was actually an org problem,
+<break time="150ms"/>
+or restructuring a hierarchy when it was just a role assignment —
+<break time="200ms"/>
+this one's for you.</p>
 
-    ("step1",
-     "Step one: identify the structure type. "
-     "Workday isn't one organisation structure — it's several running in parallel. "
-     "And the fix for a problem in one looks nothing like the fix in another. "
-     "You've got five main types to think about. "
-     "First — the supervisory org. That's your management hierarchy: who reports to who, "
-     "how the org chart looks, who a manager's direct reports are. "
-     "Second — cost centres: financial tracking, budget coding, GL assignments. "
-     "Third — company or legal entity: the legal structure of the organisation across jurisdictions. "
-     "Fourth — custom orgs. These are flexible: regions, business units, functions, matrix structures. "
-     "Workday lets you configure them for almost anything. "
-     "And fifth — location hierarchy: offices, sites, countries, territories. "
-     "Before you do anything else on a query, confirm which of these you're actually dealing with. "
-     "It sounds obvious, but a lot of time gets lost because people jump straight to a fix "
-     "before they've established this."),
+<p>I'm going to walk you through a <prosody rate="92%">simple three-step triage</prosody>
+for any query that touches organisation structures or security in Workday.
+<break time="200ms"/>
+By the end of this, you'll know exactly which questions to ask first —
+<break time="150ms"/>
+and you'll stop wasting time solving the wrong problem.</p>
 
-    ("step2",
-     "Step two: understand what the query is actually about. "
-     "Once you know the structure type, you need to understand the nature of the problem — "
-     "because there are two very different categories, and they point in completely different directions. "
-     "The first category is structural. The query is about how something is set up — "
-     "a worker is in the wrong part of the hierarchy, a cost centre is rolling up incorrectly, "
-     "a manager has too many direct reports, or the org chart just doesn't look right. "
-     "These are configuration questions. The answer lives in the structure itself. "
-     "The second category is access. The query is about who can see or act on something — "
-     "a user can't view data they should have access to, a manager isn't receiving approval tasks, "
-     "a business process is routing to the wrong person. "
-     "These feel like org questions sometimes, but they're not. They're security questions. "
-     "The key insight is this: the symptoms can look identical. "
-     "My manager can't see their team could be either. "
-     "You have to ask — is the manager in the wrong place in the structure? "
-     "Or are they in the right place, but their security role isn't scoped correctly? "
-     "Those are different fixes."),
+<p><prosody rate="105%">Let's get into it.</prosody></p>
+</speak>"""),
 
-    ("step3a",
-     "Step three: triage to the resolution path. "
-     "Once you've got structure type and query purpose, the route forward is clear. "
-     "There are three resolution buckets. "
-     "Bucket one: org structure change. "
-     "This is where you're correcting how something is configured. "
-     "In Workday, that usually means Change Organisation Assignments — "
-     "moving a worker or position to the right supervisory org, cost centre, or custom org node. "
-     "Or it means editing a position directly, or correcting a hierarchy at the admin level. "
-     "You're changing where something sits."),
+    ("step1", """<speak>
+<p><prosody rate="90%">Step one:</prosody>
+<break time="300ms"/>
+identify the structure type.</p>
 
-    ("step3b",
-     "Bucket two: security assignment. "
-     "This is where you're correcting who has access to what. "
-     "You're looking at security role assignments, checking whether the role is scoped to "
-     "the right organisational segment, and verifying that business process routing steps "
-     "are pointing at the right role. "
-     "Workday's View Security for Securable Item task is your best friend here — "
-     "it tells you exactly what's controlling access to any given item. "
-     "You're changing who can see or act on something."),
+<p>Workday isn't one organisation structure —
+<break time="150ms"/>
+it's several <prosody rate="95%">running in parallel.</prosody>
+<break time="250ms"/>
+And the fix for a problem in one
+looks nothing like the fix in another.</p>
 
-    ("step3c",
-     "Bucket three: both. "
-     "This one comes up most often with custom orgs. "
-     "Because custom orgs are frequently used for two things at once — "
-     "as an organisational grouping, and as the basis for a security constraint. "
-     "So if access is wrong and the worker is also in the wrong custom org node, "
-     "you need to fix the structure first, then revisit the security scope. "
-     "Doing it in the wrong order will just confuse things."),
+<p>You've got five main types to think about.
+<break time="400ms"/></p>
 
-    ("outro",
-     "So — three steps. Identify the structure type. "
-     "Understand whether it's a structural issue or an access issue. "
-     "Then route to the right fix. "
-     "It takes about thirty seconds when you're used to it, and it'll save you from the "
-     "single most common time sink in Workday support: solving the wrong problem confidently. "
-     "That's it for today. If this was useful, pass it on to someone on your team who's "
-     "dealing with Workday queries — it might just save them an afternoon."),
+<p><prosody rate="92%">First</prosody> — the supervisory org.
+<break time="200ms"/>
+That's your management hierarchy:
+who reports to who, how the org chart looks,
+who a manager's direct reports are.
+<break time="350ms"/></p>
+
+<p><prosody rate="92%">Second</prosody> — cost centres.
+<break time="150ms"/>
+Financial tracking, budget coding, GL assignments.
+<break time="350ms"/></p>
+
+<p><prosody rate="92%">Third</prosody> — company or legal entity.
+<break time="150ms"/>
+The legal structure of the organisation across jurisdictions.
+<break time="350ms"/></p>
+
+<p><prosody rate="92%">Fourth</prosody> — custom orgs.
+<break time="200ms"/>
+These are flexible — regions, business units, functions, matrix structures.
+<break time="150ms"/>
+Workday lets you configure them for almost anything.
+<break time="350ms"/></p>
+
+<p>And <prosody rate="92%">fifth</prosody> — location hierarchy.
+<break time="150ms"/>
+Offices, sites, countries, territories.
+<break time="400ms"/></p>
+
+<p>Before you do anything else on a query,
+<break time="150ms"/>
+confirm which of these you're actually dealing with.
+<break time="250ms"/>
+It sounds obvious,
+but a lot of time gets lost because people jump straight to a fix
+before they've established this.</p>
+</speak>"""),
+
+    ("step2", """<speak>
+<p><prosody rate="90%">Step two:</prosody>
+<break time="300ms"/>
+understand what the query is actually about.</p>
+
+<p>Once you know the structure type,
+you need to understand the <prosody rate="93%">nature of the problem</prosody> —
+<break time="200ms"/>
+because there are two very different categories,
+and they point in completely different directions.
+<break time="400ms"/></p>
+
+<p>The first category is <prosody rate="90%">structural.</prosody>
+<break time="250ms"/>
+The query is about how something is set up —
+<break time="150ms"/>
+a worker is in the wrong part of the hierarchy,
+a cost centre is rolling up incorrectly,
+a manager has too many direct reports,
+or the org chart just doesn't look right.
+<break time="200ms"/>
+These are configuration questions.
+<break time="150ms"/>
+The answer lives in the structure itself.
+<break time="400ms"/></p>
+
+<p>The second category is <prosody rate="90%">access.</prosody>
+<break time="250ms"/>
+The query is about who can see or act on something —
+<break time="150ms"/>
+a user can't view data they should have access to,
+a manager isn't receiving approval tasks,
+a business process is routing to the wrong person.
+<break time="250ms"/>
+These <prosody rate="95%">feel</prosody> like org questions sometimes,
+but they're not.
+<break time="150ms"/>
+They're security questions.
+<break time="400ms"/></p>
+
+<p>The key insight is this:
+<break time="300ms"/>
+<prosody rate="88%">the symptoms can look identical.</prosody>
+<break time="350ms"/>
+My manager can't see their team —
+<break time="200ms"/>
+could be either.
+<break time="300ms"/>
+You have to ask —
+<break time="200ms"/>
+is the manager in the wrong place in the structure?
+<break time="200ms"/>
+Or are they in the right place,
+but their security role isn't scoped correctly?
+<break time="250ms"/>
+<prosody rate="92%">Those are different fixes.</prosody></p>
+</speak>"""),
+
+    ("step3a", """<speak>
+<p><prosody rate="90%">Step three:</prosody>
+<break time="300ms"/>
+triage to the resolution path.</p>
+
+<p>Once you've got structure type and query purpose,
+the route forward is clear.
+<break time="250ms"/>
+There are three resolution buckets.
+<break time="500ms"/></p>
+
+<p><prosody rate="90%">Bucket one:</prosody>
+<break time="250ms"/>
+org structure change.
+<break time="300ms"/>
+This is where you're correcting <prosody rate="93%">how something is configured.</prosody>
+<break time="200ms"/>
+In Workday, that usually means Change Organisation Assignments —
+<break time="150ms"/>
+moving a worker or position to the right supervisory org,
+cost centre, or custom org node.
+<break time="200ms"/>
+Or it means editing a position directly,
+or correcting a hierarchy at the admin level.
+<break time="300ms"/>
+You're changing <prosody rate="88%">where something sits.</prosody></p>
+</speak>"""),
+
+    ("step3b", """<speak>
+<p><prosody rate="90%">Bucket two:</prosody>
+<break time="250ms"/>
+security assignment.
+<break time="300ms"/>
+This is where you're correcting <prosody rate="93%">who has access to what.</prosody>
+<break time="200ms"/>
+You're looking at security role assignments,
+checking whether the role is scoped to the right organisational segment,
+and verifying that business process routing steps are pointing at the right role.
+<break time="300ms"/>
+Workday's <prosody rate="92%">View Security for Securable Item</prosody> task
+is your best friend here —
+<break time="150ms"/>
+it tells you exactly what's controlling access to any given item.
+<break time="300ms"/>
+You're changing <prosody rate="88%">who can see or act on something.</prosody></p>
+</speak>"""),
+
+    ("step3c", """<speak>
+<p><prosody rate="90%">Bucket three:</prosody>
+<break time="250ms"/>
+both.
+<break time="350ms"/>
+This one comes up most often with custom orgs.
+<break time="250ms"/>
+Because custom orgs are frequently used for <prosody rate="93%">two things at once</prosody> —
+<break time="150ms"/>
+as an organisational grouping,
+and as the basis for a security constraint.
+<break time="300ms"/>
+So if access is wrong
+and the worker is also in the wrong custom org node,
+<break time="200ms"/>
+you need to fix the structure first,
+then revisit the security scope.
+<break time="250ms"/>
+Doing it in the wrong order
+<break time="150ms"/>
+will just confuse things.</p>
+</speak>"""),
+
+    ("outro", """<speak>
+<p>So —
+<break time="300ms"/>
+three steps.
+<break time="350ms"/>
+Identify the structure type.
+<break time="300ms"/>
+Understand whether it's a structural issue or an access issue.
+<break time="300ms"/>
+Then route to the right fix.
+<break time="400ms"/></p>
+
+<p>It takes about thirty seconds when you're used to it,
+<break time="150ms"/>
+and it'll save you from the single most common time sink in Workday support:
+<break time="200ms"/>
+<prosody rate="88%">solving the wrong problem confidently.</prosody>
+<break time="400ms"/></p>
+
+<p>That's it for today.
+<break time="250ms"/>
+If this was useful,
+pass it on to someone on your team who's dealing with Workday queries —
+<break time="150ms"/>
+it might just save them an afternoon.</p>
+</speak>"""),
 ]
 
 # ── Slide assignments per narration segment ────────────────────────────────────
@@ -281,12 +427,23 @@ def build_slides():
 def main():
     print("Generating narration audio…")
     audio_clips = {}
-    for key, text in NARRATION:
+    for key, ssml in NARRATION:
         wav = AUDIO_DIR / f"{key}.wav"
         if not wav.exists():
+            raw = AUDIO_DIR / f"{key}_raw.wav"
+            # en-gb-x-rp = Received Pronunciation, -m = SSML mode
             subprocess.run(
-                ["espeak-ng", "-v", "en-gb", "-s", "145", "-p", "52",
-                 "-g", "8", "-w", str(wav), text],
+                ["espeak-ng", "-v", "en-gb-x-rp", "-s", "148", "-p", "54",
+                 "-g", "5", "-m", "-w", str(raw), ssml],
+                check=True, capture_output=True,
+            )
+            # Warm up with sox: bass boost, light reverb, normalise
+            subprocess.run(
+                ["sox", str(raw), str(wav),
+                 "bass", "+5",
+                 "treble", "-2",
+                 "reverb", "20", "50", "100", "100", "0", "1",
+                 "norm", "-1"],
                 check=True, capture_output=True,
             )
         audio_clips[key] = AudioFileClip(str(wav))
