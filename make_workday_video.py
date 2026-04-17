@@ -431,10 +431,10 @@ def main():
         wav = AUDIO_DIR / f"{key}.wav"
         if not wav.exists():
             raw = AUDIO_DIR / f"{key}_raw.wav"
-            # en-gb-x-rp = Received Pronunciation, -m = SSML mode
+            # mb-en1 = MBROLA British English diphone voice (much more natural)
             subprocess.run(
-                ["espeak-ng", "-v", "en-gb-x-rp", "-s", "148", "-p", "54",
-                 "-g", "5", "-m", "-w", str(raw), ssml],
+                ["espeak-ng", "-v", "mb-en1", "-s", "145", "-p", "50",
+                 "-m", "-w", str(raw), ssml],
                 check=True, capture_output=True,
             )
             # Warm up with sox: bass boost, light reverb, normalise
