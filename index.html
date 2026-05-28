@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily News Digest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary:   #0d1117;
+      --bg-secondary: #161b22;
+      --bg-card:      #1c2128;
+      --bg-hover:     #21262d;
+      --text-primary: #e6edf3;
+      --text-secondary: #8b949e;
+      --text-muted:   #6e7681;
+      --border:       #30363d;
+      --accent:       #58a6ff;
+      --up:           #3fb950;
+      --down:         #f85149;
+      --world-color:      #60a5fa;
+      --world-bg:         rgba(37,99,235,.18);
+      --financial-color:  #34d399;
+      --financial-bg:     rgba(5,150,105,.18);
+      --technology-color: #a78bfa;
+      --technology-bg:    rgba(124,58,237,.18);
+      --engineering-color:#fbbf24;
+      --engineering-bg:   rgba(217,119,6,.18);
+      --science-color:    #22d3ee;
+      --science-bg:       rgba(8,145,178,.18);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* ── Header ─────────────────────────────────────────────────── */
+    header {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      padding: 0.875rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-left { display: flex; align-items: center; gap: 1rem; }
+
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+    }
+
+    .logo span { color: var(--accent); }
+
+    .tagline {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-left: 1px solid var(--border);
+      padding-left: 1rem;
+    }
+
+    .header-meta {
+      text-align: right;
+      font-size: 0.8rem;
+    }
+
+    .header-meta .date { color: var(--text-secondary); }
+    .header-meta .updated { color: var(--text-muted); font-size: 0.72rem; margin-top: 0.1rem; }
+
+    /* ── Markets Ticker ──────────────────────────────────────────── */
+    .markets-bar {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      height: 38px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .markets-label {
+      padding: 0 1rem;
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      white-space: nowrap;
+      border-right: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .ticker-viewport { overflow: hidden; flex: 1; }
+
+    .ticker-track {
+      display: flex;
+      gap: 0;
+      animation: ticker-scroll 60s linear infinite;
+      width: max-content;
+    }
+
+    .ticker-track:hover { animation-play-state: paused; }
+
+    @keyframes ticker-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .ticker-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0 1.5rem;
+      font-size: 0.78rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .t-sym  { font-weight: 600; color: var(--text-primary); }
+    .t-val  { color: var(--text-secondary); }
+    .t-pct  { font-size: 0.72rem; }
+    .t-pct.up   { color: var(--up); }
+    .t-pct.down { color: var(--down); }
+    .t-pct.flat { color: var(--text-muted); }
+
+    /* ── Main layout ─────────────────────────────────────────────── */
+    main {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    .grid-top {
+      display: grid;
+      grid-template-columns: 2fr 1.1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .grid-bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    /* ── News Section Card ───────────────────────────────────────── */
+    .section-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .section-head {
+      padding: 0.875rem 1.125rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      flex-shrink: 0;
+    }
+
+    .section-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .source-badge {
+      margin-left: auto;
+      font-size: 0.67rem;
+      color: var(--text-muted);
+      padding: 0.15rem 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+
+    .refresh-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.18rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.67rem;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+      font-family: inherit;
+      margin-left: 0.4rem;
+    }
+
+    .refresh-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── Article items ───────────────────────────────────────────── */
+    .article-list { flex: 1; }
+
+    .article-item {
+      display: block;
+      padding: 0.8rem 1.125rem;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.12s;
+    }
+
+    .article-item:last-child { border-bottom: none; }
+    .article-item:hover { background: var(--bg-hover); }
+
+    .article-headline {
+      font-size: 0.845rem;
+      font-weight: 500;
+      line-height: 1.45;
+      color: var(--text-primary);
+      margin-bottom: 0.35rem;
+    }
+
+    .article-desc {
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+      margin-bottom: 0.35rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .article-meta {
+      font-size: 0.71rem;
+      color: var(--text-muted);
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+    }
+
+    .meta-dot { opacity: 0.4; }
+
+    /* ── Category theming ────────────────────────────────────────── */
+    .world      .section-icon  { background: var(--world-bg); }
+    .world      .section-title { color: var(--world-color); }
+
+    .financial  .section-icon  { background: var(--financial-bg); }
+    .financial  .section-title { color: var(--financial-color); }
+
+    .technology .section-icon  { background: var(--technology-bg); }
+    .technology .section-title { color: var(--technology-color); }
+
+    .engineering .section-icon { background: var(--engineering-bg); }
+    .engineering .section-title{ color: var(--engineering-color); }
+
+    .science    .section-icon  { background: var(--science-bg); }
+    .science    .section-title { color: var(--science-color); }
+
+    /* left-accent bar on cards */
+    .world      { border-left: 3px solid var(--world-color); }
+    .financial  { border-left: 3px solid var(--financial-color); }
+    .technology { border-left: 3px solid var(--technology-color); }
+    .engineering{ border-left: 3px solid var(--engineering-color); }
+    .science    { border-left: 3px solid var(--science-color); }
+
+    /* ── States ──────────────────────────────────────────────────── */
+    .state-loading, .state-error {
+      padding: 2rem 1.125rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .spinner {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto 0.6rem;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .state-error { color: #f85149; }
+
+    /* ── Footer ──────────────────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+
+    footer a { color: var(--text-muted); }
+
+    /* ── Responsive ──────────────────────────────────────────────── */
+    @media (max-width: 1100px) {
+      .grid-bottom { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 800px) {
+      .grid-top    { grid-template-columns: 1fr; }
+      .grid-bottom { grid-template-columns: 1fr; }
+      header { flex-direction: column; gap: 0.5rem; padding: 0.75rem 1rem; }
+      .tagline { display: none; }
+      main { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="logo">Daily <span>News</span> Digest</div>
+    <div class="tagline">World · Markets · Tech · Engineering · Science</div>
+  </div>
+  <div class="header-meta">
+    <div class="date" id="js-date"></div>
+    <div class="updated" id="js-updated"></div>
+  </div>
+</header>
+
+<!-- Markets Ticker -->
+<div class="markets-bar">
+  <div class="markets-label">Markets</div>
+  <div class="ticker-viewport">
+    <div class="ticker-track" id="js-ticker"></div>
+  </div>
+</div>
+
+<main>
+  <!-- Row 1: World (wide) + Financial -->
+  <div class="grid-top">
+    <div class="section-card world">
+      <div class="section-head">
+        <div class="section-icon">🌍</div>
+        <div class="section-title">World Events</div>
+        <span class="source-badge">BBC World</span>
+        <button class="refresh-btn" onclick="loadSection('world')">↻</button>
+      </div>
+      <div class="article-list" id="list-world">
+        <div class="state-loading"><div class="spinner"></div>Loading…</div>
+      </div>
+    </div>
+
+    <div class="section-card financial">
+      <div class="section-head">
+        <div class="section-icon">📈</div>
+        <div class="section-title">Financial Markets</div>
+        <span class="source-badge">Reuters</span>
+        <button class="refresh-btn" onclick="loadSection('financial')">↻</button>
+      </div>
+      <div class="article-list" id="list-financial">
+        <div class="state-loading"><div class="spinner"></div>Loading…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2: Technology, Engineering, Science -->
+  <div class="grid-bottom">
+    <div class="section-card technology">
+      <div class="section-head">
+        <div class="section-icon">💻</div>
+        <div class="section-title">Technology</div>
+        <span class="source-badge">The Verge</span>
+        <button class="refresh-btn" onclick="loadSection('technology')">↻</button>
+      </div>
+      <div class="article-list" id="list-technology">
+        <div class="state-loading"><div class="spinner"></div>Loading…</div>
+      </div>
+    </div>
+
+    <div class="section-card engineering">
+      <div class="section-head">
+        <div class="section-icon">⚙️</div>
+        <div class="section-title">Engineering</div>
+        <span class="source-badge">New Atlas</span>
+        <button class="refresh-btn" onclick="loadSection('engineering')">↻</button>
+      </div>
+      <div class="article-list" id="list-engineering">
+        <div class="state-loading"><div class="spinner"></div>Loading…</div>
+      </div>
+    </div>
+
+    <div class="section-card science">
+      <div class="section-head">
+        <div class="section-icon">🔬</div>
+        <div class="section-title">Science</div>
+        <span class="source-badge">Science Daily</span>
+        <button class="refresh-btn" onclick="loadSection('science')">↻</button>
+      </div>
+      <div class="article-list" id="list-science">
+        <div class="state-loading"><div class="spinner"></div>Loading…</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  News sourced via RSS feeds. Market data via Yahoo Finance.
+  Auto-refreshes every 30 minutes. &nbsp;·&nbsp;
+  <a href="javascript:void(0)" onclick="refreshAll()">Refresh now</a>
+</footer>
+
+<script>
+  // ── Config ──────────────────────────────────────────────────────
+  const RSS_API = 'https://api.rss2json.com/v1/api.json?count=7&rss_url=';
+
+  const SECTIONS = {
+    world: {
+      feed: 'https://feeds.bbci.co.uk/news/world/rss.xml',
+      fallback: 'https://rss.nytimes.com/services/xml/rss/nyt/World.xml',
+      label: 'BBC News'
+    },
+    financial: {
+      feed: 'https://feeds.content.dowjones.io/public/rss/mw_realtimeheadlines',
+      fallback: 'https://feeds.bbci.co.uk/news/business/rss.xml',
+      label: 'MarketWatch'
+    },
+    technology: {
+      feed: 'https://www.theverge.com/rss/index.xml',
+      fallback: 'https://feeds.bbci.co.uk/news/technology/rss.xml',
+      label: 'The Verge'
+    },
+    engineering: {
+      feed: 'https://newatlas.com/index.rss',
+      fallback: 'https://hackaday.com/blog/feed/',
+      label: 'New Atlas'
+    },
+    science: {
+      feed: 'https://www.sciencedaily.com/rss/all.xml',
+      fallback: 'https://feeds.bbci.co.uk/news/science_and_environment/rss.xml',
+      label: 'Science Daily'
+    }
+  };
+
+  const MARKET_SYMBOLS = [
+    { sym: 'S&P 500',   yf: '%5EGSPC' },
+    { sym: 'NASDAQ',    yf: '%5EIXIC' },
+    { sym: 'DJIA',      yf: '%5EDJI' },
+    { sym: 'BTC/USD',   yf: 'BTC-USD' },
+    { sym: 'Gold',      yf: 'GC%3DF' },
+    { sym: 'Oil (WTI)', yf: 'CL%3DF' },
+    { sym: 'EUR/USD',   yf: 'EURUSD%3DX' },
+    { sym: '10-Yr UST', yf: '%5ETNX' },
+  ];
+
+  // ── Utilities ────────────────────────────────────────────────────
+  function esc(s) {
+    return String(s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function ago(dateStr) {
+    const secs = Math.floor((Date.now() - new Date(dateStr)) / 1000);
+    if (secs < 60)   return 'just now';
+    if (secs < 3600) return `${Math.floor(secs/60)}m ago`;
+    if (secs < 86400)return `${Math.floor(secs/3600)}h ago`;
+    return `${Math.floor(secs/86400)}d ago`;
+  }
+
+  function stripTags(html) {
+    return html ? html.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').trim() : '';
+  }
+
+  // ── Date/time display ────────────────────────────────────────────
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('js-date').textContent = now.toLocaleDateString('en-US', {
+      weekday:'long', year:'numeric', month:'long', day:'numeric'
+    });
+    document.getElementById('js-updated').textContent =
+      'Updated ' + now.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+  }
+
+  // ── Market ticker ────────────────────────────────────────────────
+  let marketData = MARKET_SYMBOLS.map(m => ({
+    sym: m.sym, price: null, pct: null, yf: m.yf
+  }));
+
+  function renderTicker() {
+    const items = [...marketData, ...marketData]; // duplicate for seamless loop
+    document.getElementById('js-ticker').innerHTML = items.map(d => {
+      const priceStr = d.price !== null
+        ? Number(d.price).toLocaleString('en-US', { maximumFractionDigits: 2 })
+        : '—';
+      const pctStr  = d.pct  !== null ? Math.abs(d.pct).toFixed(2) + '%' : '—';
+      const cls  = d.pct === null ? 'flat' : d.pct >= 0 ? 'up' : 'down';
+      const arrow = d.pct === null ? '' : d.pct >= 0 ? '▲ ' : '▼ ';
+      return `<div class="ticker-item">
+        <span class="t-sym">${esc(d.sym)}</span>
+        <span class="t-val">${priceStr}</span>
+        <span class="t-pct ${cls}">${arrow}${pctStr}</span>
+      </div>`;
+    }).join('');
+  }
+
+  async function loadMarkets() {
+    try {
+      const syms = MARKET_SYMBOLS.map(m => m.yf).join(',');
+      const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${syms}&fields=regularMarketPrice,regularMarketChangePercent`;
+      const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+      const res = await fetch(proxy, { signal: AbortSignal.timeout(8000) });
+      const outer = await res.json();
+      const json = JSON.parse(outer.contents);
+      const results = json?.quoteResponse?.result || [];
+      results.forEach((q, i) => {
+        if (marketData[i]) {
+          marketData[i].price = q.regularMarketPrice ?? null;
+          marketData[i].pct   = q.regularMarketChangePercent ?? null;
+        }
+      });
+    } catch (_) {
+      // Market data unavailable — ticker still shows symbols with dashes
+    }
+    renderTicker();
+  }
+
+  // ── News sections ────────────────────────────────────────────────
+  async function fetchFeed(url) {
+    const res = await fetch(RSS_API + encodeURIComponent(url), {
+      signal: AbortSignal.timeout(10000)
+    });
+    const data = await res.json();
+    if (data.status !== 'ok' || !data.items?.length) throw new Error('No items');
+    return data.items;
+  }
+
+  async function loadSection(key) {
+    const container = document.getElementById(`list-${key}`);
+    container.innerHTML = '<div class="state-loading"><div class="spinner"></div>Loading…</div>';
+
+    const cfg = SECTIONS[key];
+    let items = null;
+
+    // Try primary feed, then fallback
+    try {
+      items = await fetchFeed(cfg.feed);
+    } catch (_) {
+      try {
+        items = await fetchFeed(cfg.fallback);
+      } catch (_) {
+        container.innerHTML = `<div class="state-error">Unable to load news — check your connection.</div>`;
+        return;
+      }
+    }
+
+    const html = items.slice(0, 7).map(item => {
+      const title = esc(item.title || 'Untitled');
+      const desc  = esc(stripTags(item.description || item.content || '').slice(0, 130));
+      const link  = esc(item.link || '#');
+      const date  = ago(item.pubDate || item.published || '');
+      return `<a href="${link}" target="_blank" rel="noopener noreferrer" class="article-item">
+        <div class="article-headline">${title}</div>
+        ${desc ? `<div class="article-desc">${desc}…</div>` : ''}
+        <div class="article-meta">
+          <span>${esc(cfg.label)}</span>
+          <span class="meta-dot">·</span>
+          <span>${date}</span>
+        </div>
+      </a>`;
+    }).join('');
+
+    container.innerHTML = html;
+  }
+
+  // ── Bootstrap ────────────────────────────────────────────────────
+  function refreshAll() {
+    updateClock();
+    loadMarkets();
+    Object.keys(SECTIONS).forEach(loadSection);
+  }
+
+  renderTicker();       // show dashes immediately
+  refreshAll();         // then load real data
+
+  // Auto-refresh every 30 minutes
+  setInterval(refreshAll, 30 * 60 * 1000);
+</script>
+</body>
+</html>
